@@ -23,7 +23,8 @@ const LoginPage = () => {
         formData
       );
 
-      if (response.data.success) {
+      // If login successful, handle token and redirect
+      if (response.data.token) {
         // Store JWT token in localStorage
         localStorage.setItem("token", response.data.token);
 
@@ -38,7 +39,17 @@ const LoginPage = () => {
         setErrorMessage(response.data.message || "Login failed.");
       }
     } catch (error) {
-      setErrorMessage("An error occurred during login.");
+      // Handle different types of errors (wrong credentials or other issues)
+      if (error.response) {
+        const { message } = error.response.data;
+        if (message === "New user? Register now!") {
+          setErrorMessage("New user? Register now!");
+        } else {
+          setErrorMessage("Wrong credentials! Please try again.");
+        }
+      } else {
+        setErrorMessage("An error occurred during login.");
+      }
     }
   };
 
