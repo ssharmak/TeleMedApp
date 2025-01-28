@@ -1,26 +1,33 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const patientRoutes = require("./routes/patientRoutes");
 const cors = require("cors");
-require("dotenv").config();
-const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// Middleware
+// Enable CORS for front-end to make requests to the backend
 app.use(cors());
+
+// Middleware to parse incoming JSON requests
 app.use(express.json());
 
-// Routes
+// Use patient routes for handling API calls related to patients
+app.use("/api/patients", patientRoutes);
+
+const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", authRoutes);
 
-// Connect to MongoDB
+// MongoDB connection
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://ssharmak:JBbLrbJgAxfIDS5s@wandervibe.y23u0.mongodb.net/?retryWrites=true&w=majority&appName=WanderVibe"
+  ) // Remove deprecated options
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => {
+    console.log("MongoDB connection error:", err);
+  });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start the server
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
+});

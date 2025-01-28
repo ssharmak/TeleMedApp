@@ -1,3 +1,4 @@
+// RegisterPage.js
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -120,13 +121,6 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "5px",
   },
-  select: {
-    marginBottom: "15px",
-    padding: "10px",
-    fontSize: "1rem",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-  },
   button: {
     padding: "10px",
     fontSize: "1rem",
@@ -136,13 +130,13 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
-  success: {
-    color: "green",
+  error: {
+    color: "red",
     textAlign: "center",
     marginBottom: "20px",
   },
-  error: {
-    color: "red",
+  success: {
+    color: "green",
     textAlign: "center",
     marginBottom: "20px",
   },
