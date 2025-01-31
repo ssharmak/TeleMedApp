@@ -22,13 +22,19 @@ const DoctorDashboard = () => {
 
   const handleReplySubmit = async (patientId) => {
     try {
-      await axios.put(`http://localhost:5000/api/patients/reply/${patientId}`, {
-        doctorReply: reply,
-      });
-      setReply("");
-      alert("Reply added successfully");
+      const response = await axios.put(
+        `http://localhost:5000/api/patients/reply/${patientId}`,
+        { doctorReply: reply }
+      );
+
+      if (response.data.success) {
+        alert("Reply added successfully! Patient can view it in their portal.");
+        setReply("");
+      } else {
+        alert("Failed to send reply.");
+      }
     } catch (error) {
-      alert("Error adding reply");
+      alert("Error sending reply.");
     }
   };
 
