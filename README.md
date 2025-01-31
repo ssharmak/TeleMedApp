@@ -40,8 +40,8 @@ This project is a **Healthcare Telemedicine Application** that enables an **oper
 
 ### 1️⃣ **Clone the Repository**  
 ```bash
-git clone https://github.com/your-repo-url
-cd telemedicine-app
+[git clone https://github.com/](https://github.com/ssharmak/TeleMedApp.git)
+cd TeleMedApp
 ```
 
 ### 2️⃣ **Install Dependencies**  
