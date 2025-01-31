@@ -8,7 +8,8 @@ const LoginPage = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // To handle navigation
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,39 +18,39 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
         formData
       );
 
-      // If login successful, handle token and redirect
       if (response.data.token) {
-        // Store JWT token in localStorage
+        // Store token and user data
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        // Redirect user based on their role
-        if (response.data.role === "operator") {
-          navigate("/operator");
-        } else if (response.data.role === "doctor") {
-          navigate("/doctor");
+        // Redirect based on role
+        switch (response.data.user.role) {
+          case "operator":
+            navigate("/operator");
+            break;
+          case "doctor":
+            navigate("/doctor");
+            break;
+          default:
+            navigate("/");
         }
-        setErrorMessage(""); // Clear any previous error
-      } else {
-        setErrorMessage(response.data.message || "Login failed.");
+        setErrorMessage("");
       }
     } catch (error) {
-      // Handle different types of errors (wrong credentials or other issues)
       if (error.response) {
-        const { message } = error.response.data;
-        if (message === "New user? Register now!") {
-          setErrorMessage("New user? Register now!");
-        } else {
-          setErrorMessage("Wrong credentials! Please try again.");
-        }
+        setErrorMessage(error.response.data.message || "Login failed");
       } else {
         setErrorMessage("An error occurred during login.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,8 +77,8 @@ const LoginPage = () => {
           required
           style={styles.input}
         />
-        <button type="submit" style={styles.button}>
-          Login
+        <button type="submit" style={styles.button} disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
       <p style={styles.link}>
@@ -122,6 +123,8 @@ const styles = {
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+    opacity: 1,
+    transition: "opacity 0.3s ease",
   },
   error: {
     color: "red",
